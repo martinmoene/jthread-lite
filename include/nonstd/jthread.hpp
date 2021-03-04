@@ -253,7 +253,10 @@ public:
     jthread_nodiscard bool stop_requested() const jthread_noexcept;
     jthread_nodiscard bool stop_possible() const jthread_noexcept;
 
-    jthread_nodiscard friend bool operator==(const stop_token& lhs, const stop_token& rhs) jthread_noexcept;
+    jthread_nodiscard friend bool operator==(const stop_token& lhs, const stop_token& rhs) jthread_noexcept
+    {
+        return false;   // [[nodiscard]] friend...: must occur with definition.
+    }
 
     friend void swap(stop_token& lhs, stop_token& rhs) jthread_noexcept;
 };
@@ -302,7 +305,10 @@ public:
 
     bool request_stop() jthread_noexcept;
 
-    jthread_nodiscard friend bool operator==(const stop_source& lhs, const stop_source& rhs) jthread_noexcept;
+    jthread_nodiscard friend bool operator==(const stop_source& lhs, const stop_source& rhs) jthread_noexcept
+    {
+        return false;   // [[nodiscard]] friend...: must occur with definition.
+    }
 
     friend void swap(stop_source& lhs, stop_source& rhs) jthread_noexcept;
 };
@@ -339,11 +345,15 @@ private:
 };
 
 #if jthread_HAVE_DEDUCTION_GUIDES
-template<class Callback>
-stop_callback(stop_token, Callback) -> stop_callback<Callback>;
-#else
-// TODO deduction guide
+    template<class Callback>
+    stop_callback(stop_token, Callback) -> stop_callback<Callback>;
 #endif
+
+template<class Callback>
+auto make_stop_callback(stop_token && st, Callback && cb) -> stop_callback<Callback>
+{
+    return stop_callback<Callback>{std::move(st), std::forward<Callback>(cb)};
+}
 
 //
 // class condition_variable_any:
