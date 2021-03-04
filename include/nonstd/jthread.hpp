@@ -30,6 +30,19 @@
 //# pragma message("jthread.hpp: Note: Tweak header not supported.")
 #endif
 
+// Control presence of exception handling (try and auto discover):
+
+#ifndef jthread_CONFIG_NO_EXCEPTIONS
+# if _MSC_VER
+# include <cstddef>     // for _HAS_EXCEPTIONS
+# endif
+# if defined(__cpp_exceptions) || defined(__EXCEPTIONS) || (_HAS_EXCEPTIONS)
+#  define jthread_CONFIG_NO_EXCEPTIONS  0
+# else
+#  define jthread_CONFIG_NO_EXCEPTIONS  1
+# endif
+#endif
+
 // TODO Switch between nonstd and std version of jthread:
 
 #define  jthread_CONFIG_SELECT_JTHREAD_NONSTD    1
@@ -116,32 +129,28 @@
 
 // Presence of C++11 language features:
 
-#define jthread_HAVE_FREE_BEGIN              jthread_CPP14_120
 #define jthread_HAVE_CONSTEXPR_11           (jthread_CPP11_000 && !jthread_BETWEEN(jthread_COMPILER_MSVC_VER, 1, 1910))
 #define jthread_HAVE_NOEXCEPT                jthread_CPP11_140
 #define jthread_HAVE_NULLPTR                 jthread_CPP11_100
 #define jthread_HAVE_DEFAULT_FN_TPL_ARGS     jthread_CPP11_120
 #define jthread_HAVE_EXPLICIT_CONVERSION     jthread_CPP11_120
-#define jthread_HAVE_CHAR16_T                jthread_CPP11_000
-#define jthread_HAVE_CHAR32_T                jthread_HAVE_CHAR16_T
 
 // Presence of C++14 language features:
 
 #define jthread_HAVE_CONSTEXPR_14            jthread_CPP14_000
-#define jthread_HAVE_FREE_BEGIN              jthread_CPP14_120
 
 // Presence of C++17 language features:
 
-#define jthread_HAVE_FREE_SIZE               jthread_CPP17_140
+#define jthread_HAVE_DEDUCTION_GUIDES        jthread_CPP17_000
+#define jthread_HAVE_INLINE_VAR              jthread_CPP17_000
 #define jthread_HAVE_NODISCARD               jthread_CPP17_000
 
 // Presence of C++20 language features:
 
-#define jthread_HAVE_CHAR8_T                 jthread_CPP20_000
+// none
 
 // Presence of C++ library features:
 
-#define jthread_HAVE_REGEX                  (jthread_CPP11_000 && !jthread_BETWEEN(jthread_COMPILER_GNUC_VERSION, 1, 490))
 #define jthread_HAVE_TYPE_TRAITS             jthread_CPP11_110
 
 // Usage of C++ language features:
@@ -166,8 +175,10 @@
 
 #if jthread_HAVE_NOEXCEPT && !jthread_CONFIG_NO_EXCEPTIONS
 # define jthread_noexcept noexcept
+# define jthread_noexcept_op(expr) noexcept(expr)
 #else
 # define jthread_noexcept /*noexcept*/
+# define jthread_noexcept_op(expr) /*noexcept(expr)*/
 #endif
 
 #if jthread_HAVE_NODISCARD
@@ -206,7 +217,7 @@ namespace nonstd {
         explicit nostopstate_t() = default;
     };
 
-    inline constexpr nostopstate_t nostopstate{};
+    inline jthread_constexpr nostopstate_t nostopstate{};
 
     // 32.3.5 class stop_callback
     template<class Callback>
@@ -226,25 +237,25 @@ public:
 
     // 32.3.3.1, constructors, copy, and assignment
 
-    stop_token() noexcept;
-    stop_token(const stop_token&) noexcept;
-    stop_token(stop_token&&) noexcept;
+    stop_token() jthread_noexcept;
+    stop_token(const stop_token&) jthread_noexcept;
+    stop_token(stop_token&&) jthread_noexcept;
 
-    stop_token& operator=(const stop_token&) noexcept;
-    stop_token& operator=(stop_token&&) noexcept;
+    stop_token& operator=(const stop_token&) jthread_noexcept;
+    stop_token& operator=(stop_token&&) jthread_noexcept;
 
     ~stop_token();
 
-    void swap(stop_token&) noexcept;
+    void swap(stop_token&) jthread_noexcept;
 
     // 32.3.3.2, stop handling
 
-    [[nodiscard]] bool stop_requested() const noexcept;
-    [[nodiscard]] bool stop_possible() const noexcept;
+    jthread_nodiscard bool stop_requested() const jthread_noexcept;
+    jthread_nodiscard bool stop_possible() const jthread_noexcept;
 
-    [[nodiscard]] friend bool operator==(const stop_token& lhs, const stop_token& rhs) noexcept;
+    jthread_nodiscard friend bool operator==(const stop_token& lhs, const stop_token& rhs) jthread_noexcept;
 
-    friend void swap(stop_token& lhs, stop_token& rhs) noexcept;
+    friend void swap(stop_token& lhs, stop_token& rhs) jthread_noexcept;
 };
 
 //
@@ -256,7 +267,11 @@ struct nostopstate_t
     explicit nostopstate_t() = default;
 };
 
-inline constexpr nostopstate_t nostopstate{};
+#if jthread_HAVE_INLINE_VAR
+inline jthread_constexpr nostopstate_t nostopstate{};
+#else
+// TODO inline variable
+#endif
 
 //
 // class stop_source:
@@ -268,28 +283,28 @@ public:
     // 32.3.4.1, constructors, copy, and assignment
 
     stop_source();
-    explicit stop_source(nostopstate_t) noexcept;
-    stop_source(const stop_source&) noexcept;
-    stop_source(stop_source&&) noexcept;
+    explicit stop_source(nostopstate_t) jthread_noexcept;
+    stop_source(const stop_source&) jthread_noexcept;
+    stop_source(stop_source&&) jthread_noexcept;
 
-    stop_source& operator=(const stop_source&) noexcept;
-    stop_source& operator=(stop_source&&) noexcept;
+    stop_source& operator=(const stop_source&) jthread_noexcept;
+    stop_source& operator=(stop_source&&) jthread_noexcept;
 
     ~stop_source();
 
-    void swap(stop_source&) noexcept;
+    void swap(stop_source&) jthread_noexcept;
 
     // 32.3.4.2, stop handling
 
-    [[nodiscard]] stop_token get_token() const noexcept;
-    [[nodiscard]] bool stop_possible() const noexcept;
-    [[nodiscard]] bool stop_requested() const noexcept;
+    jthread_nodiscard stop_token get_token() const jthread_noexcept;
+    jthread_nodiscard bool stop_possible() const jthread_noexcept;
+    jthread_nodiscard bool stop_requested() const jthread_noexcept;
 
-    bool request_stop() noexcept;
+    bool request_stop() jthread_noexcept;
 
-    [[nodiscard]] friend bool operator==(const stop_source& lhs, const stop_source& rhs) noexcept;
+    jthread_nodiscard friend bool operator==(const stop_source& lhs, const stop_source& rhs) jthread_noexcept;
 
-    friend void swap(stop_source& lhs, stop_source& rhs) noexcept;
+    friend void swap(stop_source& lhs, stop_source& rhs) jthread_noexcept;
 };
 
 //
@@ -306,11 +321,11 @@ public:
 
     template<class C>
     explicit stop_callback(const stop_token& st, C&& cb)
-        noexcept(std::is_nothrow_constructible_v<Callback, C>);
+        jthread_noexcept_op((std::is_nothrow_constructible<Callback, C>::value));
 
     template<class C>
     explicit stop_callback(stop_token&& st, C&& cb)
-        noexcept(std::is_nothrow_constructible_v<Callback, C>);
+        jthread_noexcept_op((std::is_nothrow_constructible<Callback, C>::value));
 
     ~stop_callback();
 
@@ -323,8 +338,12 @@ private:
     Callback callback; // exposition only
 };
 
+#if jthread_HAVE_DEDUCTION_GUIDES
 template<class Callback>
 stop_callback(stop_token, Callback) -> stop_callback<Callback>;
+#else
+// TODO deduction guide
+#endif
 
 //
 // class condition_variable_any:
@@ -338,8 +357,8 @@ public:
     condition_variable_any(const condition_variable_any&) = delete;
     condition_variable_any& operator=(const condition_variable_any&) = delete;
 
-    void notify_one() noexcept;
-    void notify_all() noexcept;
+    void notify_one() jthread_noexcept;
+    void notify_all() jthread_noexcept;
 
     // 32.6.4.1, noninterruptible waits
 
@@ -387,41 +406,41 @@ public:
 
     // 32.4.3.1, constructors, move, and assignment
 
-    jthread() noexcept;
+    jthread() jthread_noexcept;
     template<class F, class... Args> explicit jthread(F&& f, Args&&... args);
     ~jthread();
 
     jthread(const jthread&) = delete;
-    jthread(jthread&&) noexcept;
+    jthread(jthread&&) jthread_noexcept;
 
     jthread& operator=(const jthread&) = delete;
-    jthread& operator=(jthread&&) noexcept;
+    jthread& operator=(jthread&&) jthread_noexcept;
 
     // 32.4.3.2, members
 
-    void swap(jthread&) noexcept;
+    void swap(jthread&) jthread_noexcept;
 
-    [[nodiscard]] bool joinable() const noexcept;
+    jthread_nodiscard bool joinable() const jthread_noexcept;
 
     void join();
     void detach();
 
-    [[nodiscard]] id get_id() const noexcept;
-    [[nodiscard]] native_handle_type native_handle(); // see 32.2.3
+    jthread_nodiscard id get_id() const jthread_noexcept;
+    jthread_nodiscard native_handle_type native_handle(); // see 32.2.3
 
     // 32.4.3.3, stop token handling
 
-    [[nodiscard]] stop_source get_stop_source() noexcept;
-    [[nodiscard]] stop_token get_stop_token() const noexcept;
-    bool request_stop() noexcept;
+    jthread_nodiscard stop_source get_stop_source() jthread_noexcept;
+    jthread_nodiscard stop_token get_stop_token() const jthread_noexcept;
+    bool request_stop() jthread_noexcept;
 
     // 32.4.3.4, specialized algorithms
 
-    friend void swap(jthread& lhs, jthread& rhs) noexcept;
+    friend void swap(jthread& lhs, jthread& rhs) jthread_noexcept;
 
     // 32.4.3.5, static members
 
-    [[nodiscard]] static unsigned int hardware_concurrency() noexcept;
+    jthread_nodiscard static unsigned int hardware_concurrency() jthread_noexcept;
 
 private:
     stop_source ssource; // exposition only
