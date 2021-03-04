@@ -273,7 +273,7 @@ struct nostopstate_t
 #if jthread_HAVE_INLINE_VAR
 inline jthread_constexpr nostopstate_t nostopstate{};
 #else
-// TODO inline variable
+# define nostopstate nostopstate_t{}
 #endif
 
 //
