@@ -1,3 +1,5 @@
 # jthread lite: C++20's jthread for C++11 and later
 
 A work in its infancy. Suggested by Peter Featherstone.
+
+[![Language](https://img.shields.io/badge/C%2B%2B-11/14/17/20-blue.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization) [![License](https://img.shields.io/badge/license-BSL-blue.svg)](https://opensource.org/licenses/BSL-1.0) [![Build Status](https://travis-ci.org/martinmoene/jthread-lite.svg?branch=master)](https://travis-ci.org/martinmoene/jthread-lite) [![Build status](https://ci.appveyor.com/api/projects/status/nrnbfhvvp39ex075?svg=true)](https://ci.appveyor.com/project/martinmoene/jthread-lite) [![Version](https://badge.fury.io/gh/martinmoene%2Fjthread-lite.svg)](https://github.com/martinmoene/jthread-lite/releases) [![download](https://img.shields.io/badge/latest-download-blue.svg)](https://raw.githubusercontent.com/martinmoene/jthread-lite/master/include/nonstd/jthread.hpp) [![Conan](https://img.shields.io/badge/on-conan-blue.svg)]() [![Try it online](https://img.shields.io/badge/on-wandbox-blue.svg)]() [![Try it on godbolt online](https://img.shields.io/badge/on-godbolt-blue.svg)]()
