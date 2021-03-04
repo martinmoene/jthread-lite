@@ -59,7 +59,8 @@ namespace std {
 
 }
 
-#include "lest_cpp03.hpp"
+#define   lest_FEATURE_AUTO_REGISTER 1
+#include "lest.hpp"
 
 extern lest::tests & specification();
 
