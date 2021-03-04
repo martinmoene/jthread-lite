@@ -2,5 +2,5 @@
 
 CASE("jthread: ")
 {
-    EXPECT( false );
+    EXPECT( true );
 }
