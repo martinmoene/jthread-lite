@@ -427,8 +427,8 @@ class jthread
 public:
     // types:
 
-    using id = std::thread::id;
-    using native_handle_type = std::thread::native_handle_type;
+    using id = ::std::thread::id;
+    using native_handle_type = ::std::thread::native_handle_type;
 
     // 32.4.3.1, constructors, move, and assignment
 
@@ -439,7 +439,7 @@ public:
     template< class F, class... Args >
     explicit jthread( F && f, Args &&... args )
         : m_ssource{}
-        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)>(args)... }
+        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)...>(args)... }
     {}
 
     ~jthread()
@@ -466,8 +466,8 @@ public:
             join();
         }
 
-        m_thread  = std::move( thr.m_thread  );
-        m_ssource = std::move( thr.m_ssource );
+        m_thread  = ::std::move( thr.m_thread  );
+        m_ssource = ::std::move( thr.m_ssource );
 
         return *this;
     }
@@ -476,7 +476,7 @@ public:
 
     void swap( jthread & other ) jthread_noexcept
     {
-        using std::swap;
+        using ::std::swap;
         swap( m_ssource, other.m_ssource );
         swap( m_thread , other.m_thread  );
     }
@@ -533,11 +533,15 @@ public:
 
     // 32.4.3.5, static members
 
-    jthread_nodiscard static unsigned int hardware_concurrency() jthread_noexcept;
+    jthread_nodiscard static unsigned int hardware_concurrency() jthread_noexcept
+    {
+        return ::std::thread::hardware_concurrency();
+    }
+
 
 private:
-    stop_source m_ssource;  // not yet used
-    std::thread m_thread{};
+    stop_source   m_ssource;  // not yet used
+    ::std::thread m_thread{};
 };
 
 } // namespace std
