@@ -199,7 +199,10 @@
 # define jthread_explicit_cv /*explicit*/
 #endif
 
-#include <condition_variable>
+#ifdef jthread_COMPILE_CONDITION_VARIABLE_ANY_
+# include <condition_variable>
+#endif
+
 #include <thread>
 #include <type_traits>
 
@@ -222,7 +225,7 @@ namespace nonstd {
     // 32.3.5 class stop_callback
     template<class Callback>
     class stop_callback;
-} // namespace std
+} // namespace nonstd
 #endif
 
 namespace nonstd {
@@ -322,6 +325,8 @@ public:
 // class stop_callback:
 //
 
+#ifdef jthread_COMPILE_STOP_CALLBACK_
+
 template<class Callback>
 class stop_callback
 {
@@ -360,9 +365,13 @@ auto make_stop_callback(stop_token && st, Callback && cb) -> stop_callback<Callb
     return stop_callback<Callback>{std::move(st), std::forward<Callback>(cb)};
 }
 
+#endif // jthread_COMPILE_STOP_CALLBACK_
+
 //
 // class condition_variable_any:
 //
+
+#ifdef jthread_COMPILE_CONDITION_VARIABLE_ANY_
 
 class condition_variable_any
 {
@@ -407,6 +416,8 @@ public:
     bool wait_for(Lock& lock, stop_token stoken, const std::chrono::duration<Rep, Period>& rel_time, Predicate pred);
 };
 
+#endif // jthread_COMPILE_CONDITION_VARIABLE_ANY_
+
 //
 // class jthread:
 //
@@ -427,7 +438,7 @@ public:
 
     template< class F, class... Args >
     explicit jthread( F && f, Args &&... args )
-        : m_ssource{ nostopstate }  // TODO m_ssource{}
+        : m_ssource{}
         , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)>(args)... }
     {}
 
@@ -448,6 +459,7 @@ public:
     jthread & operator=( jthread && thr ) jthread_noexcept
     {
         // if not joined/detached, signal stop and wait for end:
+
         if ( joinable() )
         {
             // TODO request_stop();
@@ -524,7 +536,7 @@ public:
     jthread_nodiscard static unsigned int hardware_concurrency() jthread_noexcept;
 
 private:
-    stop_source m_ssource;  // not used yet
+    stop_source m_ssource;  // not yet used
     std::thread m_thread{};
 };
 
