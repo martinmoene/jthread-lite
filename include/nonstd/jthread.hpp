@@ -53,7 +53,7 @@
 # define jthread_CONFIG_SELECT_JTHREAD jthread_CONFIG_SELECT_JTHREAD_NONSTD
 #endif
 
-#if jthread_CONFIG_SELECT_JTHREAD != jthread_CONFIG_SELECT_JTHREAD_NONSTD
+#if jthread_CONFIG_SELECT_JTHREAD == jthread_CONFIG_SELECT_JTHREAD_STD
 # error jthread selection other that nonstd not yet supported.
 #endif
 
