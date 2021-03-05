@@ -7,9 +7,24 @@ CASE("jthread: default construct")
     EXPECT( thr.get_id() != std::this_thread::get_id() );
 }
 
-CASE("jthread: create thread with callback")
+CASE("jthread: create thread with callback - no parameters")
 {
-    nonstd::jthread thr{[]{} };
+    int gx = 7;
+    {
+        nonstd::jthread thr{ [&]{ gx = 42; } };
 
-    EXPECT( thr.joinable() );
+        EXPECT( thr.joinable() );
+    }
+    EXPECT( gx == 42 );
+}
+
+CASE("jthread: create thread with callback - with parameters")
+{
+    int gx = 7;
+    {
+        nonstd::jthread thr{[&](int x, int y){ gx = x * y; }, 6, 7 };
+
+        EXPECT( thr.joinable() );
+    }
+    EXPECT( gx == 42 );
 }
