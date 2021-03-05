@@ -20,4 +20,4 @@ int main()
 
 // define: THREAD_STD, JTHREAD_STD, none/other
 // clang-cl -DJTHREAD_STD -std:c++latest -MTd -EHsc -W3 -I../include/ 01-basic.cpp && 01-basic.exe
-// g++ -DJTHREAD_STD -std=c++20 -Wall -I../include/ 01-basic.cpp && 01-basic.exe
+// g++ -DJTHREAD_STD -std=c++2a -Wall -I../include/ -o 01-basic.exe 01-basic.cpp && 01-basic.exe
