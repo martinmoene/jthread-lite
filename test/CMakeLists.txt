@@ -139,6 +139,10 @@ function( make_target target std )
     target_compile_options    ( ${target} PRIVATE ${OPTIONS} )
     target_compile_definitions( ${target} PRIVATE ${DEFINITIONS} )
 
+    if ( UNIX )
+        target_link_libraries ( ${target} PRIVATE pthread )
+    endif()
+
     if( std )
         if( MSVC )
             target_compile_options( ${target} PRIVATE -std:${std} )
