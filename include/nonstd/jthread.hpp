@@ -437,7 +437,7 @@ public:
     {}
 
     template< class F, class... Args
-        , typename = ::std::enable_if_t<!::std::is_same_v<::std::decay_t<F>, jthread>> >
+        , typename = typename ::std::enable_if<!::std::is_same<typename ::std::decay<F>::type, jthread>::value >::type >
     explicit jthread( F && f, Args &&... args )
         : m_ssource{}
 #if jthread_BETWEEN(jthread_COMPILER_MSVC_VER, 1, 1910)
