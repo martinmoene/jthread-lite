@@ -187,12 +187,12 @@ endif()
 # with C++17, honour explicit request for std::jthread or nonstd::jthread:
 
 if( HAS_CPP17_FLAG )
-    set( WHICH jthread_JTHREAD_DEFAULT )
+    set( WHICH jthread_CONFIG_SELECT_JTHREAD_DEFAULT )
 
     if( JTHREAD_LITE_OPT_SELECT_STD )
-        set( WHICH jthread_JTHREAD_STD )
+        set( WHICH jthread_CONFIG_SELECT_JTHREAD_STD )
     elseif( JTHREAD_LITE_OPT_SELECT_NONSTD )
-        set( WHICH jthread_JTHREAD_NONSTD )
+        set( WHICH jthread_CONFIG_SELECT_JTHREAD_NONSTD )
     endif()
 
     target_compile_definitions( ${PROGRAM}-cpp17.t PRIVATE jthread_CONFIG_SELECT_JTHREAD=${WHICH} )
