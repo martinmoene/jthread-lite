@@ -253,7 +253,7 @@ public:
     jthread_nodiscard bool stop_requested() const jthread_noexcept;
     jthread_nodiscard bool stop_possible() const jthread_noexcept;
 
-    jthread_nodiscard friend bool operator==(const stop_token& lhs, const stop_token& rhs) jthread_noexcept
+    jthread_nodiscard friend bool operator==(const stop_token& /*lhs*/, const stop_token& /*rhs*/) jthread_noexcept
     {
         return false;   // [[nodiscard]] friend...: must occur with definition.
     }
@@ -310,7 +310,7 @@ public:
 
     bool request_stop() jthread_noexcept;
 
-    jthread_nodiscard friend bool operator==(const stop_source& lhs, const stop_source& rhs) jthread_noexcept
+    jthread_nodiscard friend bool operator==(const stop_source& /*lhs*/, const stop_source& /*rhs*/) jthread_noexcept
     {
         return false;   // [[nodiscard]] friend...: must occur with definition.
     }
