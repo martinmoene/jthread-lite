@@ -436,10 +436,15 @@ public:
         : m_ssource{ nostopstate }
     {}
 
-    template< class F, class... Args >
+    template< class F, class... Args
+        , typename = ::std::enable_if_t<!::std::is_same_v<::std::decay_t<F>, jthread>> >
     explicit jthread( F && f, Args &&... args )
         : m_ssource{}
-        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)...>(args)... }
+#if jthread_BETWEEN(jthread_COMPILER_MSVC_VER, 1, 1910)
+        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<Args>(args)... }
+#else
+        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)>(args)... }
+#endif
     {}
 
     ~jthread()
