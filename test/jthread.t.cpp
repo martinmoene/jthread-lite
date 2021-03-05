@@ -1,5 +1,7 @@
 #include "jthread-main.t.hpp"
 
+namespace {
+
 CASE("jthread: default construct")
 {
     nonstd::jthread thr;
@@ -28,3 +30,14 @@ CASE("jthread: create thread with callback - with parameters")
     }
     EXPECT( gx == 42 );
 }
+
+CASE( "tweak header: Reads tweak header if supported " "[tweak]" )
+{
+#if jthread_HAVE_TWEAK_HEADER
+    EXPECT( jthread_TWEAK_VALUE == 42 );
+#else
+    EXPECT( !!"Tweak header is not available (jthread_HAVE_TWEAK_HEADER: 0)." );
+#endif
+}
+
+} // anonymous namespace
