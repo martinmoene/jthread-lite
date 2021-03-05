@@ -285,15 +285,20 @@ class stop_source
 public:
     // 32.3.4.1, constructors, copy, and assignment
 
-    stop_source();
-    explicit stop_source(nostopstate_t) jthread_noexcept;
+    stop_source()
+    {}
+
+    explicit stop_source(nostopstate_t) jthread_noexcept
+    {}
+
     stop_source(const stop_source&) jthread_noexcept;
     stop_source(stop_source&&) jthread_noexcept;
 
     stop_source& operator=(const stop_source&) jthread_noexcept;
     stop_source& operator=(stop_source&&) jthread_noexcept;
 
-    ~stop_source();
+    ~stop_source()
+    {}
 
     void swap(stop_source&) jthread_noexcept;
 
@@ -409,51 +414,118 @@ public:
 class jthread
 {
 public:
-    // types
+    // types:
 
     using id = std::thread::id;
     using native_handle_type = std::thread::native_handle_type;
 
     // 32.4.3.1, constructors, move, and assignment
 
-    jthread() jthread_noexcept;
-    template<class F, class... Args> explicit jthread(F&& f, Args&&... args);
-    ~jthread();
+    jthread() jthread_noexcept
+        : m_ssource{ nostopstate }
+    {}
 
-    jthread(const jthread&) = delete;
-    jthread(jthread&&) jthread_noexcept;
+    template< class F, class... Args >
+    explicit jthread( F && f, Args &&... args )
+        : m_ssource{ nostopstate }  // TODO m_ssource{}
+        , m_thread{ ::std::forward<decltype(f)>(f), ::std::forward<decltype(args)>(args)... }
+    {}
 
-    jthread& operator=(const jthread&) = delete;
-    jthread& operator=(jthread&&) jthread_noexcept;
+    ~jthread()
+    {
+        if ( joinable() )
+        {
+            // TODO request_stop();
+            join();
+        }
+    }
+
+    jthread( jthread const &) = delete;
+    jthread( jthread && other ) jthread_noexcept = default;
+
+    jthread & operator=( jthread const & ) = delete;
+
+    jthread & operator=( jthread && thr ) jthread_noexcept
+    {
+        // if not joined/detached, signal stop and wait for end:
+        if ( joinable() )
+        {
+            // TODO request_stop();
+            join();
+        }
+
+        m_thread  = std::move( thr.m_thread  );
+        m_ssource = std::move( thr.m_ssource );
+
+        return *this;
+    }
 
     // 32.4.3.2, members
 
-    void swap(jthread&) jthread_noexcept;
+    void swap( jthread & other ) jthread_noexcept
+    {
+        using std::swap;
+        swap( m_ssource, other.m_ssource );
+        swap( m_thread , other.m_thread  );
+    }
 
-    jthread_nodiscard bool joinable() const jthread_noexcept;
+    jthread_nodiscard bool joinable() const jthread_noexcept
+    {
+        return m_thread.joinable();
+    }
 
-    void join();
-    void detach();
+    void join()
+    {
+        m_thread.join();
+    }
 
-    jthread_nodiscard id get_id() const jthread_noexcept;
-    jthread_nodiscard native_handle_type native_handle(); // see 32.2.3
+    void detach()
+    {
+        m_thread.detach();
+    }
+
+    jthread_nodiscard id get_id() const jthread_noexcept
+    {
+         return m_thread.get_id();
+    }
+
+    jthread_nodiscard native_handle_type native_handle()
+    {
+        // see 32.2.3
+        return m_thread.native_handle();
+    }
 
     // 32.4.3.3, stop token handling
 
-    jthread_nodiscard stop_source get_stop_source() jthread_noexcept;
-    jthread_nodiscard stop_token get_stop_token() const jthread_noexcept;
-    bool request_stop() jthread_noexcept;
+    jthread_nodiscard stop_source get_stop_source() jthread_noexcept
+    {
+        return m_ssource;
+    }
+
+    jthread_nodiscard stop_token get_stop_token() const jthread_noexcept
+    {
+        return m_ssource.get_token();
+    }
+
+    bool request_stop() jthread_noexcept
+    {
+        return m_ssource.request_stop();
+    }
 
     // 32.4.3.4, specialized algorithms
 
-    friend void swap(jthread& lhs, jthread& rhs) jthread_noexcept;
+    friend void swap(jthread& lhs, jthread& rhs) jthread_noexcept
+    {
+        lhs.swap( rhs );
+    }
 
     // 32.4.3.5, static members
 
     jthread_nodiscard static unsigned int hardware_concurrency() jthread_noexcept;
 
 private:
-    stop_source ssource; // exposition only
+    stop_source m_ssource;  // not used yet
+    std::thread m_thread{};
 };
 
 } // namespace std
