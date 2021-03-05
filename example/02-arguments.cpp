@@ -16,5 +16,5 @@ int main(int argc, char **)
     std::cout << "Product of "<< six << " and " << seven << " is " << product << ".\n";
 }
 
-// clang-cl -std:c++latest -MTd -EHsc -W3 -I../include/ 02-arguments.cpp && 02-arguments.exe
-// g++ -std=c++2a -Wall -I../include/ -o 02-arguments.exe 02-arguments.cpp && 02-arguments.exe
+// clang-cl -std:c++14 -MTd -EHsc -W3 -I../include/ 02-arguments.cpp && 02-arguments.exe
+// g++ -std=c++11 -Wall -I../include/ -o 02-arguments.exe 02-arguments.cpp && 02-arguments.exe

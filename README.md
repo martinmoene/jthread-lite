@@ -44,7 +44,7 @@ int main(int argc, char **)
 ### Compile and run
 
 ```Text
-$ g++ -std=c++2a -Wall -I../include/ -o 02-arguments.exe 02-arguments.cpp && 02-arguments.exe
+$ g++ -std=c++11 -Wall -I../include/ -o 02-arguments.exe 02-arguments.cpp && 02-arguments.exe
 Product of 6 and 7 is 42.
 ```
 
