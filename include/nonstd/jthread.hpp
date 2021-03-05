@@ -45,11 +45,16 @@
 
 // TODO Switch between nonstd and std version of jthread:
 
-#define  jthread_CONFIG_SELECT_JTHREAD_NONSTD    1
-#define  jthread_CONFIG_SELECT_JTHREAD_STD       2
+#define  jthread_CONFIG_SELECT_JTHREAD_DEFAULT  1
+#define  jthread_CONFIG_SELECT_JTHREAD_NONSTD   2
+#define  jthread_CONFIG_SELECT_JTHREAD_STD      3
 
 #ifndef  jthread_CONFIG_SELECT_JTHREAD
 # define jthread_CONFIG_SELECT_JTHREAD jthread_CONFIG_SELECT_JTHREAD_NONSTD
+#endif
+
+#if jthread_CONFIG_SELECT_JTHREAD != jthread_CONFIG_SELECT_JTHREAD_NONSTD
+# error jthread selection other that nonstd not yet supported.
 #endif
 
 // C++ language version detection (C++20 is speculative):
