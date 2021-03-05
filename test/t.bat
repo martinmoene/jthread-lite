@@ -24,7 +24,7 @@ set msvc_defines=^
 
 set CppCoreCheckInclude=%VCINSTALLDIR%\Auxiliary\VS\include
 
-cl -nologo -W3 -EHsc %std% %unit_config% %msvc_defines% -I"%CppCoreCheckInclude%" -I../../string-view-lite/include -I../include -Ics_string -I. %unit_file%-main.t.cpp %unit_file%.t.cpp && %unit_file%-main.t.exe
+cl -nologo -W3 -EHsc %std% %unit_config% %msvc_defines% -I"%CppCoreCheckInclude%" /Ilest -I../include -Ics_string -I. %unit_file%-main.t.cpp %unit_file%.t.cpp && %unit_file%-main.t.exe
 endlocal & goto :EOF
 
 :: subroutines:
