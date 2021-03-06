@@ -27,7 +27,7 @@
 
 // Limit C++ Core Guidelines checking to GSL Lite:
 
-#if jthread_COMPILER_MSVC_VER >= 1910
+#if _MSC_VER >= 1910
 # include <CppCoreCheck/Warnings.h>
 # pragma warning(disable: ALL_CPPCORECHECK_WARNINGS)
 #endif

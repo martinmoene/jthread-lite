@@ -18,6 +18,12 @@
 #define jthread_STRINGIFY(  x )  jthread_STRINGIFY_( x )
 #define jthread_STRINGIFY_( x )  #x
 
+// jthread configuration:
+
+#define  jthread_CONFIG_SELECT_JTHREAD_DEFAULT  1
+#define  jthread_CONFIG_SELECT_JTHREAD_NONSTD   2
+#define  jthread_CONFIG_SELECT_JTHREAD_STD      3
+
 // tweak header support:
 
 #ifdef __has_include
@@ -30,6 +36,31 @@
 //# pragma message("jthread.hpp: Note: Tweak header not supported.")
 #endif
 
+#ifndef  jthread_CONFIG_SELECT_JTHREAD
+# define jthread_CONFIG_SELECT_JTHREAD jthread_CONFIG_SELECT_JTHREAD_NONSTD
+#endif
+
+#define jthread_USES_STD_JTHREAD  (jthread_CONFIG_SELECT_JTHREAD == jthread_CONFIG_SELECT_JTHREAD_STD)
+
+// Selection of std::jthread or nonstd::jthread:
+
+#if jthread_USES_STD_JTHREAD
+// # include <condition_variable>
+# include <thread>
+
+namespace nonstd {
+
+using ::std::jthread;
+using ::std::nostopstate_t;
+using ::std::stop_token;
+using ::std::stop_source;
+// using ::std::stop_callback;
+// using ::std::condition_variable_any;
+
+} // namespace nonstd
+
+#else // jthread_USES_STD_JTHREAD
+
 // Control presence of exception handling (try and auto discover):
 
 #ifndef jthread_CONFIG_NO_EXCEPTIONS
@@ -41,20 +72,6 @@
 # else
 #  define jthread_CONFIG_NO_EXCEPTIONS  1
 # endif
-#endif
-
-// TODO Switch between nonstd and std version of jthread:
-
-#define  jthread_CONFIG_SELECT_JTHREAD_DEFAULT  1
-#define  jthread_CONFIG_SELECT_JTHREAD_NONSTD   2
-#define  jthread_CONFIG_SELECT_JTHREAD_STD      3
-
-#ifndef  jthread_CONFIG_SELECT_JTHREAD
-# define jthread_CONFIG_SELECT_JTHREAD jthread_CONFIG_SELECT_JTHREAD_NONSTD
-#endif
-
-#if jthread_CONFIG_SELECT_JTHREAD == jthread_CONFIG_SELECT_JTHREAD_STD
-# error jthread selection other that nonstd not yet supported.
 #endif
 
 // C++ language version detection (C++20 is speculative):
@@ -556,4 +573,5 @@ private:
 
 } // namespace std
 
+#endif // jthread_USES_STD_JTHREAD
 #endif // NONSTD_JTHREAD_LITE_HPP

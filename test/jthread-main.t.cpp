@@ -70,7 +70,7 @@ lest::tests & specification()
     return tests;
 }
 
-CASE( "thread-lite version" "[.string][.version]" )
+CASE( "jthread-lite version" "[.jthread][.version]" )
 {
     jthread_PRESENT( jthread_lite_MAJOR   );
     jthread_PRESENT( jthread_lite_MINOR   );
@@ -80,10 +80,14 @@ CASE( "thread-lite version" "[.string][.version]" )
     // jthread_PRESENT( jthread_CPP98_FALLBACK );
 }
 
-CASE( "thread-lite configuration" "[.string][.config]" )
+CASE( "jthread-lite configuration" "[.jthread][.config]" )
 {
+#if jthread_USES_STD_JTHREAD
+    std::cout << "(Configuration not available: using std::string_view)\n";
+#else
     jthread_PRESENT( jthread_CPLUSPLUS );
     jthread_PRESENT( jthread_CPLUSPLUS_V );
+#endif
 }
 
 CASE( "__cplusplus" "[.stdc++]" )
@@ -99,20 +103,28 @@ CASE( "__cplusplus" "[.stdc++]" )
 
 CASE( "Compiler version" "[.compiler]" )
 {
+#if jthread_USES_STD_JTHREAD
+    std::cout << "(Compiler version not available: using std::string_view)\n";
+#else
     jthread_PRESENT( jthread_COMPILER_APPLECLANG_VERSION );
     jthread_PRESENT( jthread_COMPILER_CLANG_VERSION );
     jthread_PRESENT( jthread_COMPILER_GNUC_VERSION );
     jthread_PRESENT( jthread_COMPILER_MSVC_VERSION );
     jthread_PRESENT( jthread_COMPILER_MSVC_VERSION_FULL );
+#endif
 }
 
 CASE( "presence of C++ language features" "[.stdlanguage]" )
 {
+#if jthread_USES_STD_JTHREAD
+    std::cout << "(C++ language features not available: using std::string_view)\n";
+#else
     jthread_PRESENT( jthread_HAVE_CONSTEXPR_11 );
     jthread_PRESENT( jthread_HAVE_DEFAULT_FN_TPL_ARGS );
     jthread_PRESENT( jthread_HAVE_EXPLICIT_CONVERSION );
     jthread_PRESENT( jthread_HAVE_NODISCARD );
     jthread_PRESENT( jthread_HAVE_NOEXCEPT );
+#endif
 }
 
 CASE( "presence of C++ library features" "[.stdlibrary]" )
