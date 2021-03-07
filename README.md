@@ -145,8 +145,18 @@ The version of *jthread lite* is available via tag `[.version]`. The following t
 <p>
 
 ```Text
-jthread: default construct
-jthread: create thread with callback - no parameters
-jthread: create thread with callback - with parameters
+jthread: Allows to default-construct a jthread
+jthread: Allows to create a thread with a callback - no parameters
+jthread: Allows to create a thread with a callback - with parameters
+jthread: Allows to check if a thread is joinable
+jthread: Allows to join a thread
+jthread: Allows to detach a thread
+jthread: Allows to obtain stop_source - stop_source not-implemented
+jthread: Allows to obtain stop_token - stop_token not-implemented
+jthread: Allows to request a thread to stop - stop_token not-implemented
+jthread: Allows to swap two threads
+jthread: Allows to obtain a thread's id[.jthread][.info]
+jthread: Allows to obtain a thread's native handle[.jthread][.info]
+jthread: Allows to obtain the maximum number of hardware threads[.jthread][.info]
 tweak header: Reads tweak header if supported [tweak]
 ```
