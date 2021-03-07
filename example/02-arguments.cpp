@@ -1,7 +1,7 @@
 #include "nonstd/jthread.hpp"
 #include <iostream>
 
-int main(int argc, char **)
+int main()
 {
     int product = 0;
     const int six = 6;
