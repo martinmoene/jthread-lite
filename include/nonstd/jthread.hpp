@@ -316,16 +316,16 @@ public:
     explicit stop_source(nostopstate_t) jthread_noexcept
     {}
 
-    stop_source(const stop_source&) jthread_noexcept;
-    stop_source(stop_source&&) jthread_noexcept;
+    stop_source(const stop_source&) jthread_noexcept {};
+    stop_source(stop_source&&) jthread_noexcept {}
 
-    stop_source& operator=(const stop_source&) jthread_noexcept;
-    stop_source& operator=(stop_source&&) jthread_noexcept;
+    stop_source& operator=(const stop_source&) jthread_noexcept { return *this; }
+    stop_source& operator=(stop_source&&) jthread_noexcept { return *this; }
 
     ~stop_source()
     {}
 
-    void swap(stop_source&) jthread_noexcept;
+    void swap(stop_source&) jthread_noexcept{}
 
     // 32.3.4.2, stop handling
 
@@ -503,9 +503,8 @@ public:
 
     void swap( jthread & other ) jthread_noexcept
     {
-        using ::std::swap;
-        swap( m_ssource, other.m_ssource );
-        swap( m_thread , other.m_thread  );
+        ::std::swap( m_ssource, other.m_ssource );
+        ::std::swap( m_thread , other.m_thread  );
     }
 
     jthread_nodiscard bool joinable() const jthread_noexcept
