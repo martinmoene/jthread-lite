@@ -10,7 +10,7 @@
 #define NONSTD_JTHREAD_LITE_HPP
 
 #define jthread_lite_MAJOR  0
-#define jthread_lite_MINOR  0
+#define jthread_lite_MINOR  1
 #define jthread_lite_PATCH  0
 
 #define jthread_lite_VERSION  jthread_STRINGIFY(jthread_lite_MAJOR) "." jthread_STRINGIFY(jthread_lite_MINOR) "." jthread_STRINGIFY(jthread_lite_PATCH)
