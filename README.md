@@ -160,3 +160,6 @@ jthread: Allows to obtain a thread's native handle[.jthread][.info]
 jthread: Allows to obtain the maximum number of hardware threads[.jthread][.info]
 tweak header: Reads tweak header if supported [tweak]
 ```
+
+</p>
+</details>
