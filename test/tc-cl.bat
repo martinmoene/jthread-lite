@@ -14,8 +14,8 @@ if NOT "%1" == "" set std=%1 & shift
 set UCAP=%unit%
 call :toupper UCAP
 
-set unit_select=%unit%_%UCAP%_NONSTD
-::set unit_select=%unit%_CONFIG_SELECT_%UCAP%_NONSTD
+::set unit_select=%unit%_%UCAP%_NONSTD
+set unit_select=%unit%_CONFIG_SELECT_%UCAP%_NONSTD
 if NOT "%1" == "" set unit_select=%1 & shift
 
 set args=%1 %2 %3 %4 %5 %6 %7 %8 %9
