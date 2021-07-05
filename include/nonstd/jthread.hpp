@@ -316,7 +316,7 @@ public:
     explicit stop_source(nostopstate_t) jthread_noexcept
     {}
 
-    stop_source(const stop_source&) jthread_noexcept {};
+    stop_source(const stop_source&) jthread_noexcept {}
     stop_source(stop_source&&) jthread_noexcept {}
 
     stop_source& operator=(const stop_source&) jthread_noexcept { return *this; }
