@@ -11,20 +11,24 @@ set unit_file=jthread
 set std=c++11
 if NOT "%1" == "" set std=%1 & shift
 
-set select_jthread=jthread_CONFIG_SELECT_JTHREAD_NONSTD
-if NOT "%1" == "" set select_jthread=%1 & shift
+set UCAP=%unit%
+call :toupper UCAP
+
+::set unit_select=%unit%_%UCAP%_NONSTD
+set unit_select=%unit%_CONFIG_SELECT_%UCAP%_NONSTD
+if NOT "%1" == "" set unit_select=%1 & shift
 
 set args=%1 %2 %3 %4 %5 %6 %7 %8 %9
 
 set  clang=clang
 
 call :CompilerVersion version
-echo %clang% %version%: %std% %select_jthread% %args%
+echo %clang% %version%: %std% %unit_select% %args%
 
 set unit_config=^
     -Djthread_JTHREAD_HEADER=\"nonstd/jthread.hpp\" ^
     -Djthread_TEST_NODISCARD=0 ^
-    -Djthread_CONFIG_SELECT_JTHREAD=%select_jthread%
+    -Djthread_CONFIG_SELECT_JTHREAD=%unit_select%
 
 rem -flto / -fwhole-program
 set  optflags=-O2
