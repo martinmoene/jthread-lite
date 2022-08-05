@@ -74,7 +74,7 @@ using ::std::stop_source;
 # endif
 #endif
 
-// C++ language version detection (C++20 is speculative):
+// C++ language version detection (C++23 is speculative):
 // Note: VC14.0/1900 (VS2015) lacks too much from C++14.
 
 #ifndef   jthread_CPLUSPLUS
@@ -89,7 +89,7 @@ using ::std::stop_source;
 #define jthread_CPP11_OR_GREATER  ( jthread_CPLUSPLUS >= 201103L )
 #define jthread_CPP14_OR_GREATER  ( jthread_CPLUSPLUS >= 201402L )
 #define jthread_CPP17_OR_GREATER  ( jthread_CPLUSPLUS >= 201703L )
-#define jthread_CPP20_OR_GREATER  ( jthread_CPLUSPLUS >= 202000L )
+#define jthread_CPP20_OR_GREATER  ( jthread_CPLUSPLUS >= 202002L )
 #define jthread_CPP23_OR_GREATER  ( jthread_CPLUSPLUS >= 202300L )
 
 // MSVC version:
